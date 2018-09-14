@@ -21,8 +21,8 @@ make -j8
 popd
 
 pushd $OUTPUT_DIR
-lipo -create device/libsqlcipher_static.a sim/libsqlcipher_static.a -output libsqlcipher.a
-lipo -create device/libsqlcipher.dylib sim/libsqlcipher.dylib -output libsqlcipher.dylib
+lipo -create device/libsqlcipher.a sim/libsqlcipher.a -output libsqlcipher.a
+#lipo -create device/libsqlcipher.dylib sim/libsqlcipher.dylib -output libsqlcipher.dylib
 
 rm -rf device
 rm -rf sim
