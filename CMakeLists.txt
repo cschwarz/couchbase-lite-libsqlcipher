@@ -30,6 +30,8 @@ add_definitions(
   -DHAVE_USLEEP
   -DHAVE_UTIME
   -DSQLITE_OMIT_LOAD_EXTENSION 
+  -DSQLITE_ENABLE_RTREE
+  -DSQLITE_ENABLE_FTS5
   -DSQLITE_ENABLE_FTS4
   -DDSQLITE_ENABLE_FTS3_PARENTHESIS
   -DSQLITE_ENABLE_FTS3_TOKENIZER
@@ -37,6 +39,11 @@ add_definitions(
 
 if(NOT MSVC)
   add_definitions(-DHAVE_GMTIME_R)
+else()
+  add_definitions(
+    -D_CRT_SECURE_NO_WARNINGS
+    -DSQLITE_API=__declspec\(dllexport\)
+  )
 endif()
 
 if(APPLE)
@@ -54,4 +61,10 @@ set(SRC_FILES src/c/sqlite3.c)
 if(NOT APPLE)
   set(SRC_FILES ${SRC_FILES} src/c/crypto_mbedtls.c)
 endif()
-add_library(sqlcipher STATIC ${SRC_FILES})
+
+if(NOT MSVC)
+  add_library(sqlcipher STATIC ${SRC_FILES})
+else()
+  add_library(sqlcipher SHARED ${SRC_FILES})
+  target_link_libraries(sqlcipher mbedcrypto)
+endif()
